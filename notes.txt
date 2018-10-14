@@ -1,0 +1,24 @@
+4226a694bfcdadd67e32f467b638a10eabb0f671
+
+in truffle project
+ganache-cli
+->new tab
+truffle networks --clean
+truffle console
+migrate
+get ens address ---->
+
+
+ensAddr = '0x038c88c08990bf0b66058ce8ec49c50a1dde52f8'
+Web3 = require('Web3');
+web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+DENS = require('ethereum-ens');
+ens = new DENS(web3, ensAddr);
+namehash = require('eth-ens-namehash');
+sha3 = require('js-sha3').keccak_256;
+
+web3.personal.unlockAccount(web3.personal.listAccounts[0], "password", 15000)
+ens.owner('resolver.eth').then(console.log)
+
+ens.setSubnodeOwner(namehash.hash('eth'), '0x' + sha3('resolverx'), web3.eth.accounts[0])
+

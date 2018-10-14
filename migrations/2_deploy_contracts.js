@@ -1,7 +1,7 @@
 var DummyHashRegistrar = artifacts.require("DummyHashRegistrar");
 var TestResolver = artifacts.require("TestResolver");
 var ENS = artifacts.require("ENS");
-var SubdomainRegistrar = artifacts.require("SubdomainRegistrar");
+var SubdomainRegistrar = artifacts.require("SubdomainRegistrar.sol");
 
 var namehash = require('eth-ens-namehash');
 var sha3 = require('js-sha3').keccak_256;
@@ -26,7 +26,9 @@ module.exports = function(deployer, network, accounts) {
     });
   }
 
-  if (network == "test") {
+
+  console.log('test')
+  // if (network == "test") {
     return deployer.deploy(ENS).then(function() {
       return ENS.deployed();
     }).then(function(ens) {
@@ -34,7 +36,7 @@ module.exports = function(deployer, network, accounts) {
         // Set `resolver.eth` to resolve to the test resolver
         return ens.setSubnodeOwner(0, '0x' + sha3('eth'), accounts[0]);
       }).then(function() {
-        return ens.setSubnodeOwner(namehash.hash('eth'), '0x' + sha3('resolver'), accounts[0]);
+        return ens.setSubnodeOwner(namehash.hash('eth'), '0x' + sha3('resolver' ), accounts[0]);
       }).then(function() {
         return TestResolver.deployed();
       }).then(function(resolver) {
@@ -47,7 +49,7 @@ module.exports = function(deployer, network, accounts) {
         });
       });
     });
-  } else {
-    return ENS.deployed().then(stage2);
-   }
+  // } else {
+  //   return ENS.deployed().then(stage2);
+  //  }
 };
