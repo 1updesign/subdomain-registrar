@@ -21,12 +21,11 @@ module.exports = function(deployer, network, accounts) {
 
       var events2 = ens.allEvents([], function(error, log){
          console.log(error,log.args);
-      });      
+      });
 
-
-      return ens.setSubnodeOwner(namehash.hash('eth'), '0x' + sha3('resolver'), registrar.address, {from: accounts[0]}).then(function() {
+      return ens.setOwner(namehash.hash('resolver.eth'), registrar.address, {from: accounts[0]}).then(function() {
         return FIFSRegistrar.deployed().then((fifs)=>{fifs.register('0x'+sha3('test'), '0x972e45b1e7E468466276305aB20E4cB09B1AD0E6', {from: accounts[0]}).then((tx)=>{
-          // console.log(tx)
+      //     console.log(tx)
           ens.owner(namehash.hash('test.resolver.eth')).then(console.log)
         })})
       });
