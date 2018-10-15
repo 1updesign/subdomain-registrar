@@ -8,6 +8,7 @@ truffle console
 migrate
 get ens address ---->
 
+ENS.deployed().then((ens)=>{ens.owner(namehash.hash('resolver.eth')).then(console.log)})
 
 ensAddr = '0x038c88c08990bf0b66058ce8ec49c50a1dde52f8'
 Web3 = require('Web3');

@@ -22,11 +22,30 @@ contract ENS {
         uint64 ttl;
     }
 
+    event LogAddr(
+    address indexed addr,
+    string str
+    );
+
+    event LogB32(
+    bytes32 indexed b32,
+    string str
+    );   
+
+    event LogBool(
+        bool indexed bl,
+        string str
+        );
+
     mapping (bytes32 => Record) records;
 
     // Permits modifications only by the owner of the specified node.
     modifier only_owner(bytes32 node) {
-        if (records[node].owner != msg.sender) throw;
+        emit LogB32(node, 'ens node');
+        emit LogAddr(records[node].owner, 'ens owner');
+        emit LogAddr(msg.sender, 'ens sender');
+        emit LogBool(records[node].owner == msg.sender, 'owner is sender');
+        // if (records[node].owner != msg.sender) throw;
         _;
     }
 
