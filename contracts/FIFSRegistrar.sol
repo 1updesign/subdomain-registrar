@@ -34,7 +34,7 @@ contract FIFSRegistrar {
         emit LogBool(currentOwner == 0, 'co is 0');
 
         address currentOwner = ens.owner(keccak256(rootNode, subnode));
-        // require(currentOwner == 0 || currentOwner == msg.sender);
+        require(currentOwner == 0 || currentOwner == msg.sender);
         _;
     }
 
