@@ -1,5 +1,5 @@
 var DummyHashRegistrar = artifacts.require("DummyHashRegistrar");
-var TestResolver = artifacts.require("TestResolver");
+var PublicResolver = artifacts.require("PublicResolver");
 var ENS = artifacts.require("ENS");
 var FIFSRegistrar = artifacts.require("FIFSRegistrar.sol");
 
@@ -53,13 +53,13 @@ module.exports = function(deployer, network, accounts) {
       return ENS.deployed();
     }).then(function(ens) {
       console.log('from: '+accounts[0])
-      return deployer.deploy([[DummyHashRegistrar, ens.address], [TestResolver, ens.address]]).then(function() {
+      return deployer.deploy([[DummyHashRegistrar, ens.address], [PublicResolver, ens.address]]).then(function() {
         // Set `resolver.eth` to resolve to the test resolver
         return ens.setSubnodeOwner(0, '0x' + sha3('eth'), accounts[0], {from: accounts[0]});
       }).then(function() {
         return ens.setSubnodeOwner(namehash.hash('eth'), '0x' + sha3('resolver'), accounts[0], {from: accounts[0]});
       }).then(function() {
-        return TestResolver.deployed();
+        return PublicResolver.deployed();
       }).then(function(resolver) {
         return ens.setResolver(namehash.hash('resolver.eth'), resolver.address, {from: accounts[0]});
       }).then(function() {
