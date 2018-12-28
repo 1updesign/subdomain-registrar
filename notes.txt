@@ -8,6 +8,7 @@ truffle console
 migrate
 get ens address ---->
 
+namehash = require('eth-ens-namehash');
 ENS.deployed().then((ens)=>{ens.owner(namehash.hash('resolver.eth')).then(console.log)})
 
 ensAddr = '0x038c88c08990bf0b66058ce8ec49c50a1dde52f8'
@@ -23,3 +24,7 @@ ens.owner('resolver.eth').then(console.log)
 
 ens.setSubnodeOwner(namehash.hash('eth'), '0x' + sha3('resolverx'), web3.eth.accounts[0])
 
+var events = myContractInstance.allEvents([additionalFilterObject], function(error, log){
+ if (!error)
+   console.log(log);
+});

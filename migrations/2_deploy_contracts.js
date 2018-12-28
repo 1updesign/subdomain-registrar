@@ -14,7 +14,7 @@ module.exports = function(deployer, network, accounts) {
     return deployer.deploy(FIFSRegistrar, ens.address, namehash.hash('resolver.eth')).then(function() {
       return FIFSRegistrar.deployed();
     }).then(function(registrar) {
-
+      registrarAddr = registrar.address;
       var events = registrar.allEvents([], function(error, log){
          console.log(error,log.args);
       });
@@ -24,13 +24,11 @@ module.exports = function(deployer, network, accounts) {
       });
 
       return ens.setOwner(namehash.hash('resolver.eth'), registrar.address, {from: accounts[0]}).then(function() {
-        return FIFSRegistrar.deployed().then((fifs)=>{fifs.register('0x'+sha3('test'), '0x972e45b1e7E468466276305aB20E4cB09B1AD0E6', {from: accounts[0]}).then((tx)=>{
+        return FIFSRegistrar.deployed().then((fifs)=>{fifs.register('0x'+sha3('test'), '0x627306090abab3a6e1400e9345bc60c78a8bef57', {from: accounts[0]}).then((tx)=>{
       //     console.log(tx)
           ens.owner(namehash.hash('test.resolver.eth')).then(console.log)
         })})
       });
-
-
 
 
 
@@ -47,11 +45,15 @@ module.exports = function(deployer, network, accounts) {
   }
 
 
-  console.log('test')
+  let ensAddr = null;
+  let resolverAddr = null;
+  let registrarAddr = null;
+
   // if (network == "test") {
     return deployer.deploy(ENS).then(function() {
       return ENS.deployed();
     }).then(function(ens) {
+      ensAddr = ens.address;
       console.log('from: '+accounts[0])
       return deployer.deploy([[DummyHashRegistrar, ens.address], [PublicResolver, ens.address]]).then(function() {
         // Set `resolver.eth` to resolve to the test resolver
@@ -61,12 +63,19 @@ module.exports = function(deployer, network, accounts) {
       }).then(function() {
         return PublicResolver.deployed();
       }).then(function(resolver) {
+        resolverAddr = resolver.address;
         return ens.setResolver(namehash.hash('resolver.eth'), resolver.address, {from: accounts[0]});
       }).then(function() {
         return DummyHashRegistrar.deployed();
       }).then(function(dhr) {
         return ens.setSubnodeOwner(0, '0x' + sha3('eth'), dhr.address, {from: accounts[0]}).then(function() {
-          return stage2(ens, dhr);
+          return stage2(ens, dhr).then(()=>{
+          console.log(`
+REACT_APP_ENS_ADDRESS=${ensAddr}
+REACT_APP_FIFS_REGISTRAR_ADDRESS=${registrarAddr}
+REACT_APP_RESOLVER_ADDRESS=${resolverAddr}
+            `)
+          });
         });
       });
     });

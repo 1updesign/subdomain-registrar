@@ -86,6 +86,7 @@
       "version": "2.1.0"
     },
     "truffle-default-builder": "^2.0.0",
+    "truffle-privatekey-provider": "^1.0.0",
     "underscore": "^1.8.3"
   }
 }
